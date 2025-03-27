@@ -17,7 +17,8 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs"
 import { Loader2 } from "lucide-react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { toast } from "sonner"
 
 const Login = () => {
   const [loginInput, setLoginInput] = useState({ email: "", password: "" })
@@ -49,6 +50,23 @@ const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault()
   }
+
+  // showing toast effect of user login or logourt etc
+
+  useEffect(() => {
+    if (registerIsSuccess && registerData) {
+      toast.success(registerData.message || "signup successfully")
+    }
+    if (registerError) {
+      toast.error(registerData.data.message || "Signup Failed")
+    }
+    if (loginIsSuccess && loginData) {
+      toast.success(loginData.message || "login successfully")
+    }
+    if (loginError) {
+      toast.error(loginData.data.message || "Login failed")
+    }
+  }, [loginIsSuccess, registerIsSuccess, loginData, registerData, loginError, registerError])
 
   return (
     <div className="flex items-center justify-center h-screen bg-[#ccc]">
