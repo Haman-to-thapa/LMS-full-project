@@ -1,3 +1,4 @@
+import { useRegisterUserMutation, useLoginUserMutation } from "@/featureSlice/api/authApi"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -15,11 +16,17 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs"
+import { Loader2 } from "lucide-react"
 import { useState } from "react"
 
 const Login = () => {
   const [loginInput, setLoginInput] = useState({ email: "", password: "" })
   const [signup, setSignup] = useState({ name: "", email: "", password: "" })
+
+  // use Mutation state
+  const [registerUser, { data: registerData, error: registerError, isLoading: registerIsLoading, isSuccess: registerIsSuccess }] = useRegisterUserMutation()
+  const [loginUser, { data: loginData, error: loginError, isLoading: loginIsLoading, isSuccess: loginIsSuccess }] = useLoginUserMutation()
+
 
   const changeInputHandler = (e, type) => {
     const { name, value } = e.target;
@@ -31,9 +38,11 @@ const Login = () => {
     }
   };
 
-  const hanleRegistration = (type) => {
+  const hanleRegistration = async (type) => {
     const inputData = type === "signup" ? signup : loginInput;
-    console.log(inputData)
+    // api calling 
+    const action = type === "signup" ? registerUser : loginUser
+    await action(inputData)
   }
 
 
@@ -90,8 +99,14 @@ const Login = () => {
               </CardContent>
               <CardFooter>
                 <Button
+                  disabled={registerIsLoading}
                   onClick={() => hanleRegistration('signup')}
-                >Signup</Button>
+                >{
+                    registerIsLoading ? (<>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    </>) : "Signup"
+                  }
+                </Button>
               </CardFooter>
             </Card>
           </TabsContent>
@@ -128,8 +143,16 @@ const Login = () => {
               </CardContent>
               <CardFooter>
                 <Button
-                  onClick={() => hanleRegistration("login")}
-                >Login</Button>
+                  disabled={loginIsLoading}
+                  onClick={() => hanleRegistration("login")}>
+                  {
+                    loginIsLoading ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      </>
+                    ) : "Login"
+                  }
+                </Button>
               </CardFooter>
             </Card>
           </TabsContent>
