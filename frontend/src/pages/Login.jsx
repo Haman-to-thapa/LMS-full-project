@@ -155,8 +155,9 @@ const Login = () => {
                     value={loginInput.password}
                     name="password"
                     autoComplete="current-password "
-                    type="password" placeholder="Enter 
-                    Your Password" required />
+                    type="password"
+
+                    placeholder="Enter Your Password" required />
                 </div>
               </CardContent>
               <CardFooter>
