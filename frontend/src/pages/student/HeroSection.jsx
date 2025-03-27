@@ -14,6 +14,7 @@ const HeroSection = () => {
 
         <form action="" className='flex dark:bg-gray-800 rounded-full shadow-lg overflow-hidden max-w-xl mx-auto bg-white'>
           <Input type="text"
+            placeholder="Search Courses"
             className="flex-grow border-none focus-visible:ring-0 px-6 py-3 dark:text-gray-100" />
           <Button className="bg-blue-600 dark:bg-blue-700 text-white py-3 px-6 rounded-r-full dark:hover:bg-blue-800 hover:bg-blue-700">Search</Button>
         </form>
