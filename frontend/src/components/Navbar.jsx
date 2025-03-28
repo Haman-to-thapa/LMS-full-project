@@ -6,7 +6,6 @@ import {
   Sheet,
   SheetClose,
   SheetContent,
-  SheetDescription,
   SheetFooter,
   SheetHeader,
   SheetTitle,
@@ -24,6 +23,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import DarkMode from '@/pages/DarkMode'
 import { Separator } from '@radix-ui/react-dropdown-menu'
+import { Link } from 'react-router-dom'
 
 
 const Navbar = () => {
@@ -39,7 +39,7 @@ const Navbar = () => {
 
       <div className=" h-full w-full mx-auto container  hidden md:flex justify-between items-center gap-10">
         <div className="flex items-center gap-5">
-          <School size={"30"} />
+          <Link to='/'>  <School size={"30"} /></Link>
           <h1
             className='hidden md:block font-extrabold text 2xl'
           >LMS-Learning</h1>
@@ -56,22 +56,24 @@ const Navbar = () => {
 
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56">
-                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                <DropdownMenuLabel>
+                  <Link to="my-account">My Account</Link>
+                </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
                   <DropdownMenuItem>
-                    My Learning
+                    <Link to="my-learning">My Learning</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem>
-                    Eidt Profile
+                    <Link to='profile'>Eidt Profile</Link>
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
-                  Log out
+                  <Link>Log out</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  Dashboard
+                  <Link>   Dashboard</Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>)
@@ -111,14 +113,15 @@ const MobileNabar = () => {
         </SheetTrigger>
         <SheetContent className="flex flex-col">
           <SheetHeader className="flex flex-row items-center justify-between mt-5">
+            <Link to='/'>  <School size={"30"} /></Link>
             <SheetTitle>LMS-Learning</SheetTitle>
             <DarkMode />
           </SheetHeader>
           <Separator className='mr-2'>
             <nav className='flex flex-col space-y-4 p-5'>
-              <span>My Leaning</span>
-              <span>Edit Profile</span>
-              <p>Logout</p>
+              <Link to="my-account">My Account</Link>
+              <Link to='profile'>Eidt Profile</Link>
+              <Link>Log out</Link>
             </nav>
             {
               role === "instructor" && (<SheetFooter>
