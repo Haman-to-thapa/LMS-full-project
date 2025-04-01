@@ -63,21 +63,22 @@ export const login = async(req, res) => {
 
 export const logout = async(_, res) => {
   try {
-    
-    return res.status(200).cookie("token", "", {maxAge:0}.json({
-      message: "Logged out sucessfully",
-      success:true
-    }))
+    return res
+      .status(200)
+      .cookie("token", "", { maxAge: 0 }) 
+      .json({
+        message: "Logged out successfully", 
+        success: true
+      });
 
   } catch (error) {
-    console.log(error)
-    res.status(500).json({
-      success:false,
-      message:"failed to logout"
-    })
+    console.log(error);
+   return res.status(500).json({
+      success: false,
+      message: "Failed to logout"
+    });
   }
-}
-
+};
 
 export const getUserProfile = async(req, res) => {
   try {
@@ -99,43 +100,52 @@ export const getUserProfile = async(req, res) => {
 
 
 
-export const updateProfile = async (req, res) => {
-
+    export const updateProfile = async (req, res) => {
   try {
     const userId = req.id;
-    const {name} = req.body;
-    // this comming from mongodb
+    const { name } = req.body;
     const profilePhoto = req.file;
-    
-    const user = await User.findById(userId);
-    if(!user) {
-      return res.status(404).json({success:false, message:"User not found"})
+
+    if (!userId) {
+      return res.status(400).json({ success: false, message: "User ID is required" });
     }
 
-// extract public id of the old image from the url is it exists;
-if(user.photoUrl) {
-  const publicId = user.photoUrl.split('/').pop().split(".")[0];
-  deleteMediaFromCloudinary(publicId)
-  // extract public id
-}
-// upload new photo 
-const cloudResponse = await uploadMedia(profilePhoto.path);
-const photoUrl = cloudResponse.secure_url;
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
 
-const updatedData = {name, photoUrl};
-const updatedUser = await User.findByIdAndUpdate(userId, updatedData, {new:true})
+    // Delete old profile photo if it exists
+    if (user.photoUrl) {
+      const publicId = user.photoUrl.split("/").pop().split(".")[0];
+      await deleteMediaFromCloudinary(publicId);
+    }
 
-return res.status(200).json({
-  success:true,
-  user:updatedUser,
-  message:"profile updated successfull"
-})
+    let photoUrl = user.photoUrl; // Default to existing photoUrl
     
+    // Upload new photo if provided
+    if (profilePhoto) {
+      const cloudResponse = await uploadMedia(profilePhoto.path);
+      if (!cloudResponse || !cloudResponse.secure_url) {
+        return res.status(500).json({ success: false, message: "Failed to upload image" });
+      }
+      photoUrl = cloudResponse.secure_url;
+    }
+
+    // Update user data
+    const updatedData = { name, photoUrl };
+    const updatedUser = await User.findByIdAndUpdate(userId, updatedData, { new: true });
+
+    return res.status(200).json({
+      success: true,
+      user: updatedUser,
+      message: "Profile updated successfully",
+    });
   } catch (error) {
-    console.log(error)
+    console.error("Error updating profile:", error);
     return res.status(500).json({
-      success:false,
-      message:"Failed to update profile"
-    })
+      success: false,
+      message: "Failed to update profile",
+    });
   }
-}
+};
