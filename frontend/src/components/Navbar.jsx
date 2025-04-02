@@ -1,5 +1,5 @@
 import { Menu, School } from 'lucide-react'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
@@ -23,13 +23,37 @@ import {
 } from "@/components/ui/dropdown-menu"
 import DarkMode from '@/pages/DarkMode'
 import { Separator } from '@radix-ui/react-dropdown-menu'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { useLogoutUserMutation } from '@/featureSlice/api/authApi'
+import { toast } from 'sonner'
+import { useSelector } from 'react-redux'
 
 
 const Navbar = () => {
 
   //predefault()
-  const user = true;
+  const { user } = useSelector((state) => state.auth)
+  const [logoutUser, { data, isSuccess }] = useLogoutUserMutation();
+  const navigate = useNavigate()
+
+
+
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success(data.message || "User logout")
+    }
+  }, [isSuccess])
+
+  const logoutHandler = async () => {
+    await logoutUser()
+  }
+
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success(data.message || "User logout");
+      navigate("/login")
+    }
+  }, [isSuccess])
 
   return (
     <div className='h-16 dark:bg-[#0A0A0A]b bg-white border-b dark:border-b-gray-800 border-b-gray-200 
@@ -50,7 +74,7 @@ const Navbar = () => {
             user ? (<DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Avatar>
-                  <AvatarImage src="https://github.com/shadcn.png" />
+                  <AvatarImage src={user?.photoUrl || "https://github.com/shadcn.png"} />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
 
@@ -70,17 +94,23 @@ const Navbar = () => {
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
-                  <Link>Log out</Link>
+                  <Link onClick={logoutHandler}>Log out</Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link>   Dashboard</Link>
-                </DropdownMenuItem>
+                {
+                  user.role === "instructor" && (
+                    <>
+                      <DropdownMenuItem >
+                        <Link onClick={logoutHandler}>   Dashboard</Link>
+                      </DropdownMenuItem>
+                    </>
+                  )
+                }
               </DropdownMenuContent>
             </DropdownMenu>)
               :
               <div className="flex items-center gap-2">
-                <Button>Login</Button>
-                <Button>Signup</Button>
+                <Button onClick={() => navigate('/login')}>Login</Button>
+                <Button onClick={() => navigate("/login")}>Signup</Button>
               </div>
           }
           <DarkMode />
@@ -121,7 +151,7 @@ const MobileNabar = () => {
             <nav className='flex flex-col space-y-4 p-5'>
               <Link to="my-account">My Account</Link>
               <Link to='profile'>Eidt Profile</Link>
-              <Link>Log out</Link>
+              <Link >Log out</Link>
             </nav>
             {
               role === "instructor" && (<SheetFooter>
