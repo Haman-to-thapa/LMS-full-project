@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Dialog, DialogHeader, DialogTitle, DialogContent, DialogTrigger, DialogDescription, DialogFooter } from '@/components/ui/dialog'
 
@@ -7,17 +7,60 @@ import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Loader2 } from 'lucide-react'
 import Course from './Course'
-import { useLoadUserQuery } from '@/featureSlice/api/authApi'
+import { useLoadUserQuery, useUpdateProfileUserMutation } from '@/featureSlice/api/authApi'
+import { toast } from 'sonner'
 
 const Profile = () => {
 
+  //update profile stateget
+  const [name, setName] = useState('')
+  // const [profilePhoto, setProfilePhoto] = useState('')
+
   // if getUser get then use this 
-  const { data, isLoading, error } = useLoadUserQuery();
-  console.log(data);
+  const { data, isLoading, refetch } = useLoadUserQuery();
+
+  //updateUserAdd to profile update
+  const [updateProfileUser, { data: updateData, isLoading: updateIsLoading, isError, error, isSuccess }] = useUpdateProfileUserMutation();
+
+  // profilePhoto set to chnage by onchangeHandler
+  // const onChangeHandler = (e) => {
+  //   const file = e.target.files?.[0];
+  //   if (file) {
+  //     setProfilePhoto(file);
+  //   }
+  // }
+
+  const updateUserHandler = async () => {
+    // console.log(name, profilePhoto)
+
+    const formData = new FormData();
+
+    formData.append('name', name),
+      await updateProfileUser(formData);
+
+  }
+
+  useEffect(() => {
+    refetch()
+  })
+
+
+  // if you show notification to update profilet to use useEffect
+
+  useEffect(() => {
+    if (isSuccess) {
+      refetch();
+      toast.success(data.message || "Profile updated")
+    }
+    if (isError)
+
+      toast.error(error.message || "Failed update")
+  }, [updateData, isSuccess, isError])
+
 
   if (isLoading) return <h1>Profile Loading</h1>
 
-  const { user } = data;
+  const user = data && data.user;
 
   return (
     <div className='mx-w-4xl mx-auto container px-4 my-14'>
@@ -25,7 +68,7 @@ const Profile = () => {
       <div className="flex flex-col md:flex-row items-center md:items-center gap-8 my-5">
         <div className="flex flex-col items-center">
           <Avatar className="h-24 w-24 md:h-32 md:w-32">
-            <AvatarImage src={user.photoUrl || "https://github.com/shadcn.png"} />
+            <AvatarImage src={user?.photoUrl || "https://github.com/shadcn.png"} />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
         </div>
@@ -61,16 +104,23 @@ const Profile = () => {
               <div className="grid gap-4 py-4">
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label htmlFor="name">Name</Label>
-                  <Input id="name" type="text" placeholder="Name" className="col-span-3" />
+                  <Input
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    id="name" type="text" placeholder="Name" className="col-span-3" />
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label htmlFor="profile-photo">Profile Photo</Label>
-                  <Input id="profile-photo" type="file" accept="image/*" className="col-span-3" />
+                  <Input
+
+                    id="profile-photo" type="file" accept="image/*" className="col-span-3" />
                 </div>
               </div>
               <DialogFooter>
-                <Button disabled={isLoading}>
-                  {isLoading ? (
+                <Button disabled={updateIsLoading}
+                  onClick={updateUserHandler}
+                >
+                  {updateIsLoading ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Please wait
                     </>
