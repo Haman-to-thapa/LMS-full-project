@@ -58,7 +58,7 @@ const Login = () => {
 
   useEffect(() => {
     if (registerIsSuccess && registerData) {
-      toast.success(registerData.message || "signup successfully")
+      toast.success(registerError.data.message || "signup successfully")
     }
     if (registerError) {
       toast.error(registerData.data.message || "Signup Failed")
@@ -68,14 +68,14 @@ const Login = () => {
       navigate('/')
     }
     if (loginError) {
-      toast.error(loginData.data.message || "Login failed")
+      toast.error(loginError.data.message || "Login failed")
     }
   }, [loginIsSuccess, registerIsSuccess, loginData, registerData, loginError, registerError])
 
   return (
     <div className="flex items-center justify-center h-screen bg-[#ccc]">
       <form onSubmit={handleSubmit}>
-        <Tabs defaultValue="account" className="w-[400px]">
+        <Tabs defaultValue="login" className="w-[400px]">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="signup">SignUp</TabsTrigger>
             <TabsTrigger value="login">Login</TabsTrigger>
