@@ -3,9 +3,14 @@ import rootReducer from '@/featureSlice/routeReducer';
 import { authApi } from '@/featureSlice/api/authApi';
 
 
-const store = configureStore({
+export const store = configureStore({
   reducer : rootReducer,
   middleware:(defaultMiddleware) => defaultMiddleware().concat(authApi.middleware)
 })
 
-export default store;
+
+// set set not remove user page by server without logout
+const initializeApp = async () => {
+  await store.dispatch(authApi.endpoints.loadUser.initiate({}, {forceRefetch: true}))
+}
+initializeApp()
