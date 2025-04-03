@@ -20,3 +20,19 @@ export const createCourse = async (req, res) => {
     return  res.status(500).json({message:"Failed to create course"})
   }
 }
+
+export const  getCreatorAllCourse = async (req, res) => {
+  try {
+    const {userId} = req.body;
+    
+    const courses = await Course.find({creator: userId});
+    if(!courses) {
+      return res.status(401).json({courses:[], message:"No courses available"})
+    }
+
+    return res.status(201).json(courses)
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({message:"Server Failed"})
+  }
+}
