@@ -23,7 +23,10 @@ export const createCourse = async (req, res) => {
 
 export const  getCreatorAllCourse = async (req, res) => {
   try {
-    const {userId} = req.body;
+    const userId = req.id;
+    if (!userId) {
+      return res.status(400).json({ message: "User ID is required" });
+    }
     
     const courses = await Course.find({creator: userId});
     if(!courses) {
