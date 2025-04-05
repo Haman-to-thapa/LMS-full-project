@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-const COURSE_API = `${import.meta.env.VITE_API_URL}/course`;
+const COURSE_API = "http://localhost:8080/api/v1/course";
 
 
 export const courseApi = createApi({
@@ -24,9 +24,23 @@ export const courseApi = createApi({
         method:"GET",
       }),
       providesTags:['Refetch_Creator_Course']
+    }),
+    editCourse : builder.mutation({
+      query: ({formData, courseId}) => ({
+        url:`/${courseId}`,
+        method:"PUT",
+        body:formData
+      }),
+      invalidatesTags: ['Refetch_Creator_Course'],
+    }),
+    getCourseById: builder.query({
+      query:(courseId) => ({
+        url:`/${courseId}`,
+        method: "GET"
+      })
     })
-  })
+  }),
 })
 
 
-export const {useCreateCourseMutation, useGetCeatorCourseQuery} = courseApi;
+export const {useCreateCourseMutation, useGetCeatorCourseQuery, useEditCourseMutation, useGetCourseByIdQuery} = courseApi;
