@@ -1,4 +1,5 @@
 import { Course } from "../../modules/courseModel.js";
+import { deleteMediaFromCloudinary, uploadMedia } from "../../utils/cloudinary.js";
 
 
 export const createCourse = async (req, res) => {
@@ -37,5 +38,37 @@ export const  getCreatorAllCourse = async (req, res) => {
   } catch (error) {
     console.log(error);
     return res.status(500).json({message:"Server Failed"})
+  }
+}
+
+export const editCourse = async(req, res) => {
+  try {
+    const {courseTitle, subTitle, description, category, courseLevel, coursePrice} = req.body;
+    const thumbnail = req.file;
+    const courseId = req.params.courseId;
+
+    let course = await Course.findById(courseId);
+    if(!course) {
+      return res.status(404).json({message:"course id not found"})
+    }
+
+    let courseThumbnail;
+    if(thumbnail) {
+    if(course.courseThumbnail) {
+      const publicId = course.courseThumbnail.split('/').pop().split(".")[0];
+      await deleteMediaFromCloudinary(publicId)
+    }
+    courseThumbnail = await uploadMedia(thumbnail.path)
+    }
+
+    // upload a thumbnail on cloudinary 
+
+    // 
+    const updateData =  {courseTitle, subTitle, description, category, courseLevel, coursePrice, courseThumbnail:courseThumbnail?.secure_url }
+
+
+  } catch (error) {
+    console.log(error)
+    return res.status(500).json({message:"server error"})
   }
 }
