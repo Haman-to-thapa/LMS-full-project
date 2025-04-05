@@ -35,10 +35,10 @@ const CourseTable = () => {
         </TableHeader>
         <TableBody>
           {
-            data.map((course) => (
+            data?.courses?.map((course) => (
               <TableRow key={course._id}>
 
-                <TableCell>{data?.coursePrice || "NA"}</TableCell>
+                <TableCell>{course?.coursePrice || "NA"}</TableCell>
                 <TableCell> <Badge>{course.isPublished ? "Published" : "Draft"}</Badge></TableCell>
 
                 <TableCell >{course.
