@@ -21,7 +21,7 @@ const Sidebar = () => {
   return (
     <div className="flex">
       {/* Sidebar */}
-      <div className='hidden lg:block h-screen w-[250px] sm:w-[360px] space-y-8 border-r border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 top-0'>
+      <div className='hidden lg:block h-screen w-[250px] sm:w-[360px] space-y-8 border-r border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 sticky top-0'>
         <div className="space-y-4 pt-10 px-4">
           {navLinks.map((link) => (
             <Link
