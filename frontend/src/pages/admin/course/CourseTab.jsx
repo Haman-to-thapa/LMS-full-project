@@ -3,10 +3,13 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import InfinityLoader from '@/components/ui/LoadingSpinner';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useEditCourseMutation, useGetCourseByIdQuery } from '@/featureSlice/api/courseApi';
 import { Loader2 } from 'lucide-react';
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'sonner';
 
 const CourseTab = () => {
   const navigate = useNavigate();
@@ -20,6 +23,29 @@ const CourseTab = () => {
     coursePrice: "",
     courseThumbnail: "",
   });
+
+  // api RTK
+  const [editCourse, { isLoading, data, isSuccess, error }] = useEditCourseMutation()
+  const params = useParams()
+  const courseId = params.courseId;
+
+  const { data: courseByIdData, isLoading: courseByIdLoading } = useGetCourseByIdQuery(courseId, { refetchOnMountOrArgChange: true })
+
+  const course = courseByIdData?.course;
+  useEffect(() => {
+    if (course) {
+      setInput({
+        courseTitle: course.courseTitle,
+        subTitle: course.subTitle,
+        description: course.description,
+        category: course.category,
+        courseLevel: course.courseLevel,
+        coursePrice: course.coursePrice,
+        courseThumbnail: "",
+      })
+    }
+  }, [course])
+
 
   const changeEventHandler = (e) => {
     const { name, value } = e.target;
@@ -46,16 +72,39 @@ const CourseTab = () => {
     }
   };
 
-  const updateCourseHandler = () => {
-    console.log(input);
+  const updateCourseHandler = async () => {
+
+    console.log(input)
+    // RTa added 
+    const formData = new FormData()
+    formData.append("courseTitle", input.courseTitle);
+    formData.append("subTitle", input.subTitle);
+    formData.append("description", input.description)
+    formData.append("category", input.category);
+    formData.append("courseLevel", input.courseLevel);
+    formData.append("coursePrice", input.coursePrice),
+      formData.append("courseThumbnail", input.courseThumbnail);
+
+    await editCourse({ formData, courseId })
   };
+
+  //RTa 
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success(data.message || "Course update")
+    }
+    if (error) {
+      toast.error(error.data.message || 'Failed to update course')
+    }
+  }, [isSuccess, error])
 
   const removeCourseHandler = () => {
     console.log("Course removed!");
   };
 
   const isPublished = false;
-  const isLoading = false;
+  if (courseByIdLoading) return <InfinityLoader />
+
 
   return (
     <Card>
