@@ -139,7 +139,7 @@ const Profile = () => {
         <h1 className='font-medium text-lg'>Courses you're enrolled in</h1>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 my-5">
           {
-            user.enrolledCourses.length === 0 ? <h1>You haven't enrolled yet</h1> : (
+            user?.enrolledCourses?.length === 0 ? <h1>You haven't enrolled yet</h1> : (
               user.enrolledCourses.map((course) => <Course key={course._id} course={course} />)
             )
           }
