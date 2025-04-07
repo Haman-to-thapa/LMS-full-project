@@ -11,6 +11,8 @@ import CourseTable from './pages/admin/course/CourseTable';
 import AddCourse from './pages/admin/course/AddCourse';
 import EditCourse from './pages/admin/course/EditCourse';
 import NoPage from './pages/NoPage';
+import CreateLecture from './pages/admin/lecture/CreateLecture';
+import EditLecture from './pages/admin/lecture/EditLecture';
 
 
 const App = () => {
@@ -31,6 +33,8 @@ const App = () => {
             <Route path='course' element={<CourseTable />} />
             <Route path='course/create' element={<AddCourse />} />
             <Route path='course/:courseId' element={<EditCourse />} />
+            <Route path='course/:courseId/lecture' element={<CreateLecture />} />
+            <Route path='course/:courseId/lecture/:lectureId' element={<EditLecture />} />
 
           </Route>
         </Route>
