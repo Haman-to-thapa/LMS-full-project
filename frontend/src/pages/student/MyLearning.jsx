@@ -16,7 +16,7 @@ const MyLearningSkeleton = () => (
 const MyLearning = () => {
 
   const isLoading = false;
-  const mylearningCourses = [1];
+  const mylearningCourses = [];
 
   return (
 
@@ -31,7 +31,8 @@ const MyLearning = () => {
           ) : (
             mylearningCourses.length === 0 ? (<p>you are not enerolled in any course</p>) : <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {
-                [1, 2].map((course, index) => <Course key={index} />)
+                [1, 2].map((course, index) =>
+                  <Course key={index} course={course} />)
               }
             </div>
           )

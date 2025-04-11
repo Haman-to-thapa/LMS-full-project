@@ -4,7 +4,7 @@ const COURSE_API = "http://localhost:8080/api/v1/course";
 
 export const courseApi = createApi({
   reducerPath:"courseApi",
-  tagTypes:['Refetch_Creator_Course'],
+  tagTypes:['Refetch_Creator_Course',"Refetch_Lecture"],
   baseQuery:fetchBaseQuery({
     baseUrl:COURSE_API,
     credentials:"include"
@@ -18,6 +18,12 @@ export const courseApi = createApi({
       }),
       invalidatesTags:['Refetch_Creator_Course']
     }),
+      getPublishedCourse: builder.query({
+        query : () => ({
+          url: "/published-courses",
+          method:"GET",
+        })
+      }),
     getCeatorCourse: builder.query({
       query:() => ({
         url:"",
@@ -38,9 +44,50 @@ export const courseApi = createApi({
         url:`/${courseId}`,
         method: "GET"
       })
+    }),
+    createLecture : builder.mutation({
+      query: ({courseId, lectureTitle}) => ({
+        url: `/${courseId}/lecture`,
+        method:"POST",
+        body:{lectureTitle}
+      }) 
+    }),
+    getCourseLecture : builder.query({
+      query: (courseId) => ({
+        url: `/${courseId}/lecture`,
+        method:"GET"
+      }),
+      providesTags:["Refetch_Lecture"]
+    }), 
+    editLecture : builder.mutation({
+      query: ({lectureTitle, videoInfo, isPreviewFree, courseId, lectureId}) => ({
+        url: `/${courseId}/lecture/${lectureId}`,
+        method:"PUT",
+        body:{lectureTitle,videoInfo, isPreviewFree}
+      })
+    }),
+    removeLecture: builder.mutation({
+      query: (lectureId) => ({
+        url: `/lecture/${lectureId}`,
+        method:"DELETE"
+      }),
+      invalidatesTags:["Refetch_Lecture"]
+    }),
+    getLectureById : builder.query({
+      query: (lectureId) => ({
+        url: `/lecture/${lectureId}`,
+        method: "GET",
+
+      })
+    }), 
+    publishCourse : builder.mutation({
+      query:({courseId, query}) => ({
+        url: `/${courseId}?publish=${query}`,
+        method:"PATCH"
+      })
     })
   }),
 })
 
 
-export const {useCreateCourseMutation, useGetCeatorCourseQuery, useEditCourseMutation, useGetCourseByIdQuery} = courseApi;
+export const {useCreateCourseMutation, useGetCeatorCourseQuery, useEditCourseMutation, useGetCourseByIdQuery, useCreateLectureMutation, useGetCourseLectureQuery,useEditLectureMutation,useRemoveLectureMutation, useGetLectureByIdQuery, usePublishCourseMutation, useGetPublishedCourseQuery} = courseApi;

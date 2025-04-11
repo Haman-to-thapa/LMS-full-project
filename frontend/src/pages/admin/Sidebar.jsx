@@ -27,10 +27,11 @@ const Sidebar = () => {
             <Link
               key={link.path}
               to={link.path}
-              className={`flex items-center gap-3 p-3 rounded-lg transition-all duration-200 ${location.pathname === link.path
-                ? 'bg-blue-500 text-white font-medium'
-                : 'text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800'
+              className={`flex items-center gap-3 p-3 rounded-lg transition-all duration-200 ${location.pathname.startsWith(link.path)
+                  ? 'bg-blue-500 text-white font-medium'
+                  : 'text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800'
                 }`}
+
             >
               {link.icon}
               <span className="text-sm">{link.label}</span>

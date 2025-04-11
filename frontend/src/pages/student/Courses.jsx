@@ -1,6 +1,7 @@
 import React from 'react'
 import { Skeleton } from "@/components/ui/skeleton"
 import Course from './Course';
+import { useGetPublishedCourseQuery } from '@/featureSlice/api/courseApi';
 
 // Define CoursSkeleton 
 const CourseSkeleton = () => {
@@ -23,11 +24,16 @@ const CourseSkeleton = () => {
 };
 
 // raw data 
-const coursess = [1, 2, 3, 4, 5, 6, 7, 8]
+// const coursess = [1, 2, 3, 4, 5, 6, 7, 8]
 
 const Courses = () => {
 
-  const isLoading = false;
+  const { data, isLoading, isError } = useGetPublishedCourseQuery()
+
+  console.log(data)
+
+
+  if (isError) return <h1>Some error occurred while fetching courses</h1>
 
   return (
     <div className='bg-gray-200'>
@@ -39,9 +45,11 @@ const Courses = () => {
               <CourseSkeleton key={index} />
             )) :
               (
-                coursess.map((course, index) => (
-                  <Course key={index} />
-                ))
+                data?.courses && data.courses.map((course, index) => {
+                  console.log("Course:", course);
+                  return <Course key={index} course={course} />
+                })
+
               )
 
 
