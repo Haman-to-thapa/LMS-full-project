@@ -28,13 +28,17 @@ export const uploadMedia = async(file) => {
 
 // deleteUpload file photo
 
-export const deleteMediaFromCloudinary = async(publicId) => {
+export const deleteMediaFromCloudinary = async (publicId) => {
   try {
-   await cloudinary.uploader.destroy(publicId);
+    const result = await cloudinary.uploader.destroy(publicId); // defaults to image
+    console.log("Image delete response:", result);
+    return result;
   } catch (error) {
-    console.log(error)
+    console.error("Failed to delete image:", error);
+    throw error;
   }
-}
+};
+
 
 // deletUpload video files
 
