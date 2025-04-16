@@ -1,28 +1,29 @@
-import moogoose from 'mongoose'
-const coursePurchaseSchema = new moogoose.Schema({
+import mongoose from 'mongoose';
+
+const coursePurchaseSchema = new mongoose.Schema({
   courseId: {
-    type:moogoose.Schema.Types.ObjectId,
-    ref:"Course",
-    required:true,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Course",
+    required: true,
   },
   userId: {
-    ref:"User",
-    required:true,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
   },
   amount: {
-    type:Number,
-    required:true,
+    type: Number,
+    required: true,
   },
-  status:{
-    type:String,
-    enum:["pending","completed","failed"],
-    default:"pending",
+  status: {
+    type: String,
+    enum: ["pending", "completed", "failed"],
+    default: "pending",
   },
-  paymentId:{
-    type:String,
-    required:true
-  }
-},{timestamps:true});
+  paymentId: {
+    type: String,
+    required: true,
+  },
+}, { timestamps: true });
 
-
-export const CoursePurchase = moogoose.model("CoursePurchase",coursePurchaseSchema)
+export const CoursePurchase = mongoose.model("CoursePurchase", coursePurchaseSchema);
