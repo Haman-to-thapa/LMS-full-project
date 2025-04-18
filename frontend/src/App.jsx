@@ -12,8 +12,10 @@ import AddCourse from './pages/admin/course/AddCourse';
 import EditCourse from './pages/admin/course/EditCourse';
 import NoPage from './pages/NoPage';
 import CreateLecture from './pages/admin/lecture/CreateLecture';
+
 import EditLecture from './pages/admin/lecture/EditLecture';
 import CourseDetails from './pages/student/CourseDetails';
+import CourseProgress from './pages/student/CourseProgress';
 
 
 const App = () => {
@@ -27,6 +29,7 @@ const App = () => {
           <Route path="my-learning" element={<MyLearning />} />
           <Route path='profile' element={<Profile />} />
           <Route path='course-detail/:courseId' element={<CourseDetails />} />
+          <Route path='course-progress/:courseId' element={<CourseProgress />} />
           <Route path='*' element={<NoPage />} />
 
           {/* Admin */}
