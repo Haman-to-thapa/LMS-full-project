@@ -21,10 +21,21 @@ app.use(cookieParser())
 // Configure CORS with allowed origins from environment variable or defaults
 const allowedOrigins = process.env.ALLOWED_ORIGINS
   ? process.env.ALLOWED_ORIGINS.split(',')
-  : ['http://localhost:5173', 'https://your-netlify-app.netlify.app'];
+  : ['http://localhost:5173', 'http://localhost:3000'];
 
+// For production, you should set ALLOWED_ORIGINS environment variable
+// with your frontend domain(s)
 app.use(cors({
-  origin: allowedOrigins,
+  origin: function(origin, callback) {
+    // Allow requests with no origin (like mobile apps, curl requests)
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = `The CORS policy for this site does not allow access from the specified Origin: ${origin}`;
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
   credentials: true,
 }));
 

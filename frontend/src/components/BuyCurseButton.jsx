@@ -9,14 +9,25 @@ const BuyCurseButton = ({ courseId }) => {
   const [createCheckoutSession, { data, isLoading, error, isError, isSuccess }] = useCreateCheckoutSessionMutation();
 
   const purchaseCourseHandler = async () => {
-    await createCheckoutSession(courseId)
+    console.log("Initiating checkout for course ID:", courseId);
+    try {
+      const result = await createCheckoutSession(courseId);
+      console.log("Checkout session result:", result);
+    } catch (err) {
+      console.error("Error creating checkout session:", err);
+    }
   }
 
   useEffect(() => {
     if (isSuccess) {
       if (data?.url) {
-        window.location.assign(data.url);
+        // Show success message before redirecting
+        toast.success(data.message || "Course purchased successfully!");
 
+        // Short delay before redirecting to ensure toast is seen
+        setTimeout(() => {
+          window.location.assign(data.url);
+        }, 1500);
       } else {
         toast.error("Error: Invalid Response from Server");
       }

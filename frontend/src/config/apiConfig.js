@@ -1,9 +1,9 @@
 // API configuration based on environment
-const isDevelopment = import.meta.env.MODE === 'development';
+// This can be configured for any deployment platform by setting the VITE_API_BASE_URL
+// environment variable during build or in a .env file
 
-// Base URLs for different environments
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ||
-  (isDevelopment ? 'http://localhost:8080/api/v1' : 'https://your-backend-api-url.com/api/v1');
+// Default to localhost for development, but this should be overridden in production
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api/v1';
 
 // Individual API endpoints
 export const API_ENDPOINTS = {
