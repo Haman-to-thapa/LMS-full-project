@@ -1,12 +1,12 @@
 import React from 'react'
 import { Button } from './ui/button'
-import { usePublishCourseMutation } from '@/featureSlice/api/courseApi'
+import { useCreateCheckoutSessionMutation } from '@/featureSlice/api/purchaseApi'
 import { Loader2 } from 'lucide-react';
 import { useEffect } from 'react';
 import { toast } from 'sonner';
 
 const BuyCurseButton = ({ courseId }) => {
-  const [createCheckoutSession, { data, isLoading, error, isError, isSuccess }] = usePublishCourseMutation();
+  const [createCheckoutSession, { data, isLoading, error, isError, isSuccess }] = useCreateCheckoutSessionMutation();
 
   const purchaseCourseHandler = async () => {
     await createCheckoutSession(courseId)

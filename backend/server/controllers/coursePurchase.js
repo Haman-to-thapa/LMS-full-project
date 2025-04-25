@@ -58,8 +58,8 @@ export const createCheckoutSession = async (req, res) => {
         },
       ],
       mode: "payment",
-      success_url: `http://localhost:5173/course-progress/${courseId}`,
-      cancel_url: `http://localhost:5173/course-detail/${courseId}`,
+      success_url: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/course-progress/${courseId}`,
+      cancel_url: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/course-detail/${courseId}`,
       metadata: {
         courseId: courseId,
         userId: userId,
@@ -200,7 +200,7 @@ export const getAllPurchasedCourse = async (req,res) => {
     return res.status(200).json({
       purchasedCourse,
     })
-    
+
   } catch (error) {
     console.log(error);
     return res.status(500).json({message:"Server error"})

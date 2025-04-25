@@ -1,0 +1,13 @@
+[build]
+  base = "frontend"
+  publish = "dist"
+  command = "npm run build"
+
+# Handle client-side routing
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Environment variables will be set in the Netlify UI
+# Do not add sensitive information here

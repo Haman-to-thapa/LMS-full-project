@@ -9,7 +9,7 @@ import mediaRoute from './routes/mediaRoute.js'
 import purchaseRoute from './routes/purchaseCourseRoutes.js'
 
 dotenv.config({})
-// call database conncetion here 
+// call database conncetion here
 connectDB()
 
 
@@ -18,8 +18,13 @@ const app = express();
 // default middleware
 app.use(express.json());
 app.use(cookieParser())
+// Configure CORS with allowed origins from environment variable or defaults
+const allowedOrigins = process.env.ALLOWED_ORIGINS
+  ? process.env.ALLOWED_ORIGINS.split(',')
+  : ['http://localhost:5173', 'https://your-netlify-app.netlify.app'];
+
 app.use(cors({
-  origin: ['http://localhost:5173', 'https://your-deployed-frontend.com'],
+  origin: allowedOrigins,
   credentials: true,
 }));
 

@@ -1,15 +1,13 @@
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react'
-import { userLoggedIn, userLoggedOut } from './authSlice'; 
-
-const USER_API = "http://localhost:8080/api/v1/user"; 
-
+import { userLoggedIn, userLoggedOut } from './authSlice';
+import { API_ENDPOINTS } from '@/config/apiConfig';
 
 
 
 export const authApi = createApi({
   reducerPath:"authApi",
   baseQuery: fetchBaseQuery({
-    baseUrl:USER_API,
+    baseUrl: API_ENDPOINTS.USER_API,
     credentials:"include",
   }),
   endpoints: (builder) => ({
@@ -54,7 +52,7 @@ export const authApi = createApi({
       method:"GET"
     }), async onQueryStarted(_, {queryFulfilled, dispatch}) {
       try {
-        const result = await queryFulfilled; 
+        const result = await queryFulfilled;
         dispatch(userLoggedIn({user:result.data.user}))
       } catch (error) {
         console.log(error)
@@ -68,7 +66,7 @@ export const authApi = createApi({
       body:formData,
       credentials:"include"
     })
-  })    
+  })
 
   }),
 
